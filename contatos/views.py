@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Contato
@@ -20,6 +21,9 @@ def contatos(request):
 
 def contato(request, id):
     contato = get_object_or_404(Contato, id=id)
+
+    if not contato.mostrar:
+        raise Http404()
 
     dados = {
         'contato': contato
