@@ -6,7 +6,7 @@ from .models import Contato
 
 
 def contatos(request):
-    contatos = Contato.objects.order_by('-data_criacao').all()
+    contatos = Contato.objects.order_by('-id').filter(mostrar=True)
     paginator = Paginator(contatos, 10)
 
     page = request.GET.get('page')
