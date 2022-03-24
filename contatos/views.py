@@ -1,8 +1,9 @@
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models.functions import Concat
 from django.core.paginator import Paginator
 from django.db.models import Q, Value
-from django.db.models.functions import Concat
+from django.contrib import messages
+from django.http import Http404
 from .models import Contato
 # Create your views here.
 
@@ -37,11 +38,13 @@ def contato(request, id):
 def pesquisa(request):
     termo = request.GET.get('termo')
 
-    if termo is None:
-        raise Http404()
+    if termo is None or not termo:
+        messages.add_message(request, messages.ERROR,
+                             'O campo de pesquisa não pode ficar em branco')
+        return redirect('contatos')
 
     campos = Concat('nome', Value(' '), 'sobrenome')
-    
+
     contatos = Contato.objects.annotate(
         nome_completo=campos
     ).filter(

@@ -25,6 +25,7 @@
                             placeholder="Digite sua pesquisa" 
                             id="search-input" 
                             value="{{ request.GET.termo }}">
+                            {% include 'partials/_messages.html' %}
                         </div>
                     </div>
                 </form>
