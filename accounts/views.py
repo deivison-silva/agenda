@@ -3,6 +3,7 @@ from django.contrib import messages, auth
 from django.core.validators import validate_email
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from .models import FormContato
 
 # Create your views here.
 
@@ -71,7 +72,8 @@ def register(request):
         messages.error(request, 'Email já existe!')
         return render(request, 'accounts/register.html')
 
-    messages.success(request, 'Usuário cadastrado com sucesso! Faça login para continuar.')
+    messages.success(
+        request, 'Usuário cadastrado com sucesso! Faça login para continuar.')
 
     user = User.objects.create_user(
         username=usuario, email=email, password=senha, first_name=nome, last_name=sobrenome)
@@ -79,6 +81,22 @@ def register(request):
 
     return redirect('login')
 
+
 @login_required(redirect_field_name='login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+
+    form = FormContato()
+
+    if request.method == 'POST':
+        form = FormContato(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, f'Contato { request.POST.get("nome") } cadastrado com sucesso!')
+            return redirect('dashboard')
+
+    form = {
+        'form': form
+    }
+
+    return render(request, 'accounts/dashboard.html', form)
