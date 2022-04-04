@@ -1,5 +1,6 @@
 from django.contrib.messages import constants
 from pathlib import Path, os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,7 +15,7 @@ SECRET_KEY = 'django-insecure-up-2=igk8lh)ba#d8ke6o#gfdmjn_b@rr@3w(ot1cn2gqv7rm(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -128,3 +129,6 @@ MESSAGE_TAGS = {
     constants.DEBUG: 'alert-info',
     constants.INFO: 'alert-info',
 }
+
+# Heroku
+django_heroku.settings(locals())
